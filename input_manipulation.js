@@ -12,7 +12,7 @@ function* partitions(year) {
     for (let breakPoint = 0; breakPoint < year.length; breakPoint++) {
         const last = year.substring(breakPoint)
         for (const start of partitions(year.substring(0, breakPoint))) {
-            yield start.concat([last])
+            yield start.concat([[last, breakPoint, year.length]])
         }
     }
 }
@@ -21,21 +21,34 @@ function* partitions(year) {
 * @param {string} piece
 * @returns {Iterable.<Operation>}
 */
-function* optionsForPiece(piece) {
+function* optionsForPiece(part) {
+    const [piece, startIndex, endIndex] = part
     if (piece === '0') {
-        yield Operation.number(piece)
+        const value = Operation.number(piece)
+        value.startIndex = startIndex
+        value.endIndex = endIndex
+        yield value
         return
     }
     if (piece[0] === '0') {
-        Operation.number('0.' + piece.substring(1))
+        const value = Operation.number('0.' + piece.substring(1))
+        value.startIndex = startIndex
+        value.endIndex = endIndex
+        yield value
         return
     }
     for (let decimalIndex = 1; decimalIndex < piece.length; decimalIndex++) {
-        yield Operation.number(
+        const value = Operation.number(
             piece.substring(0, decimalIndex) + '.' + piece.substring(decimalIndex)
         )
+        value.startIndex = startIndex
+        value.endIndex = endIndex
+        yield value
     }
-    yield Operation.number(piece)
+    const value = Operation.number(piece)
+    value.startIndex = startIndex
+    value.endIndex = endIndex
+    yield value
 }
 
 /**
@@ -62,6 +75,7 @@ function* optionsForPartition(partition) {
 function* startingNumbers(year) {
     for (const partition of partitions(year)) {
         for (const startingSet of optionsForPartition(partition)) {
+            console.log(startingSet)
             yield startingSet
         }
     }

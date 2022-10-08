@@ -42,6 +42,10 @@ class Operation {
     expression
     /** @type {Fraction} */
     value
+    /** @type {number} */
+    startIndex
+    /** @type {number} */
+    endIndex
 
     /**
     * @param {OperationTypes} operationType
@@ -319,5 +323,44 @@ class Operation {
             expression,
             value
         )
+    }
+}
+
+class PruningEngine {
+    sectionCache
+
+    constructor() {
+        this.sectionCache = {}
+    }
+
+    /**
+    * @param {(left: Operation, right?: Opertaion) => (Operation | undefined)} op
+    * @param {Operation} left
+    * @param {Operation} right
+    */
+    applyOperation(op, left, right) {
+        const result = op(left, right)
+        if (result === undefined) return undefined
+
+        result.startIndex = left.startIndex
+        result.endIndex = (right === undefined) ? left.endIndex : right.endIndex
+
+        const numerator = result.value.numerator
+        const denominator = result.value.denominator
+
+        const bestSolForSection = this.sectionCache[numerator]?.[denominator]
+            ?.[result.startIndex]?.[result.endIndex]
+        if ((bestSolForSection !== undefined)
+            && (result.numberOfOperations >= bestSolForSection.numberOfOperations)
+            && (result.expression !== bestSolForSection.expression)) {
+            return undefined
+        }
+
+        this.sectionCache[numerator] ||= {}
+        this.sectionCache[numerator][denominator] ||= {}
+        this.sectionCache[numerator][denominator][result.startIndex] ||= {}
+        this.sectionCache[numerator][denominator]
+            [result.startIndex][result.endIndex] = result
+        return result
     }
 }
