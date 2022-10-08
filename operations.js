@@ -1,5 +1,13 @@
 importScripts("./math.js")
 
+/** @type {Array<Fraction>} */
+const factorials = [new Fraction(1, 1)]
+for (let num = 1; num <= 20; ++num) {
+    factorials.push(
+        factorials[num - 1] * new Fraction(BigInt(num), 1)
+    )
+}
+
 /**
 * @enum {number}
 */
@@ -165,6 +173,28 @@ class Operation {
             left.numberOfOperations + right.numberOfOperations + 1,
             "\\frac{" + left.expression + "}{" + right.expression + "}",
             Fraction.div(left.value, right.value)
+        )
+    }
+
+    /**
+    * @param {Operation} op
+    * @returns {Operation | undefined}
+    */
+    static factorial(op) {
+        // Only allow factorials of integers
+        if (op.value.denominator !== 1n) return undefined
+        // Only allow factorials of non-negative integers
+        if (op.value.numerator < 0n) return undefined
+        // Prefer 1 to 1!
+        if (op.value.numerator === 1n) return undefined
+        // Only allow small factorials
+        if (op.value.numerator > 20) return undefined
+
+        return new Operation(
+            OperationTypes.Factorial,
+            op.numberOfOperations + 1,
+            op.operationType === OperationTypes.Number ? op.expression + "!" : "\\left(" + op.expression + "\\right)!",
+            factorials[op.value.numerator]
         )
     }
 }
