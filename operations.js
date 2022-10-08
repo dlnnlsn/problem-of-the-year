@@ -219,4 +219,30 @@ class Operation {
             Fraction.minus(op.value)
         )
     }
+
+    /**
+    * @param {Operation} op
+    * @returns {Operation | undefined}
+    */
+    static squareRoot(op) {
+        // Prefer 0 to Sqrt(0)
+        if (op.value.eq(0)) return undefined
+        // Prefer 1 to Sqrt(1)
+        if (op.value.eq(1)) return undefined
+
+        const numerator = nthRoot(op.value.numerator, 2n)
+        // Numerator must be a perfect square
+        if (numerator === undefined) return undefined
+
+        const denominator = nthRoot(op.value.denominator, 2n)
+        // Denominator must be a perfect square
+        if (denominator === undefined) return undefined
+
+        return new Operation(
+            OperationTypes.SquareRoot,
+            op.numberOfOperations + 1,
+            "\\sqrt{" + op.expression + "}",
+            new Fraction(numerator, denominator)
+        )
+    }
 }

@@ -122,5 +122,28 @@ function nthRoot(m, n) {
         current = next
         next = nthRootStep(m, n, next)
     } while (current > next)
-    return current
+    if (pow(current, n) === m) return current
+    return undefined
+}
+
+/**
+* @param {bigint} base
+* @param {bigint} exp
+* @returns {bigint}
+*/
+function pow(base, exp) {
+    if (base === 0n) return exp === 0n ? 1 : 0
+    if (base === 1n) return 1n
+    if (base === -1n) return exp % 2n === 1n ? -1n : 1n
+    if (base === 2n) return 1n << exp
+
+    let mask = 1n
+    while (mask <= exp) mask <<= 1n
+    let result = 1n
+    while (mask > 1n) {
+        mask >>= 1n
+        result *= result
+        if (exp & mask) result *= base
+    }
+    return result
 }
