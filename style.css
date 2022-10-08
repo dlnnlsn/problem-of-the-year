@@ -1,0 +1,28 @@
+#results-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 2rem;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.solution {
+    min-height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    box-shadow: 0 0 0.4rem 0.2rem gray;
+}
+
+.solution:hover {
+    box-shadow: 0 0 0.8rem 0.4rem gray;
+}
+
+.found {
+    box-shadow: 0 0 0.4rem 0.2rem cornflowerblue;
+}
+
+.found:hover {
+    box-shadow: 0 0 0.8rem 0.4rem cornflowerblue;
+}
