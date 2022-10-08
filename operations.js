@@ -97,4 +97,32 @@ class Operation {
             Fraction.mul(left.value, right.value)
         )
     }
+
+    static div(left, right) {
+        // Prefer -(a / b) to (-a) / b
+        if (left.operationType === OperationTypes.UnaryMinus) return undefined
+        // Prefer -(a / b) to a / (-b)
+        if (right.operationType === OperationTypes.UnaryMinus) return undefined
+        // Prefer a/(b x c) to (a / b) / c
+        if (left.operationType === OperationTypes.Divide) return undefined
+        // Prefer (a / b) x c to a / (b / c)
+        if (right.operationType === OperationTypes.Divide) return undefined
+        // Prefer Sqrt(a / b) to Sqrt(a) / Sqrt(b)
+        if ((left.operationType === OperationTypes.SquareRoot) && (right.operationType === OperationTypes.SquareRoot)) return undefined
+        // Can not divide by 0
+        if (right.value.eq(0)) return undefined
+        // Prefer 0 x a to 0 / a
+        if (left.value.eq(0)) return undefined
+        // Prefer a x 1 to a / 1
+        if (right.value.eq(1)) return undefined
+        // Prefer a x (-1) to a / (-1)
+        if (right.value.eq(-1)) return undefined
+
+        return new Operation(
+            OperationTypes.Divide,
+            left.numberOfOperations + right.numberOfOperations + 1,
+            "\\frac{" + left.expression + "}{" + right.expression + "}",
+            Fraction.div(left.value, right.value)
+        )
+    }
 }
