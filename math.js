@@ -3,7 +3,7 @@
 * @param {bigint} n
 * @returns {bigint}
 */
-function gcd(m, n) {
+export function gcd(m, n) {
     if (m < 0n) m = -m
     if (n < 0n) n = -n
 
@@ -16,7 +16,7 @@ function gcd(m, n) {
     return m
 }
 
-class Fraction {
+export class Fraction {
     /**
     * @param {bigint} numerator
     * @param {bigint} denominator
@@ -141,7 +141,7 @@ function nthRootStep(m, n, x) {
 * @param {bigint} n
 * @returns {bigint | undefined}
 */
-function nthRoot(m, n) {
+export function nthRoot(m, n) {
     if (n === 1n) return m
     if ((m < 0n) && ((n % 2n) == 0n)) return undefined
     if (m < 0n) return -nthRoot(-m, n)
@@ -160,7 +160,7 @@ function nthRoot(m, n) {
 * @param {bigint} exp
 * @returns {bigint}
 */
-function pow(base, exp) {
+export function pow(base, exp) {
     if (base === 0n) return exp === 0n ? 1 : 0
     if (base === 1n) return 1n
     if (base === -1n) return exp % 2n === 1n ? -1n : 1n
