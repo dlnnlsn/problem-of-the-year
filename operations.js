@@ -42,10 +42,8 @@ class Operation {
     expression
     /** @type {Fraction} */
     value
-    /** @type {number} */
-    startIndex
-    /** @type {number} */
-    endIndex
+    /** @type {string} */
+    digits
 
     /**
     * @param {OperationTypes} operationType
@@ -342,14 +340,14 @@ class PruningEngine {
         const result = op(left, right)
         if (result === undefined) return undefined
 
-        result.startIndex = left.startIndex
-        result.endIndex = (right === undefined) ? left.endIndex : right.endIndex
+        result.digits = left.digits
+        if (right !== undefined) result.digits += right.digits
 
         const numerator = result.value.numerator
         const denominator = result.value.denominator
 
         const bestSolForSection = this.sectionCache[numerator]?.[denominator]
-            ?.[result.startIndex]?.[result.endIndex]
+            ?.[result.digits]
         if ((bestSolForSection !== undefined)
             && (result.numberOfOperations >= bestSolForSection.numberOfOperations)
             && (result.expression !== bestSolForSection.expression)) {
@@ -358,9 +356,7 @@ class PruningEngine {
 
         this.sectionCache[numerator] ||= {}
         this.sectionCache[numerator][denominator] ||= {}
-        this.sectionCache[numerator][denominator][result.startIndex] ||= {}
-        this.sectionCache[numerator][denominator]
-            [result.startIndex][result.endIndex] = result
+        this.sectionCache[numerator][denominator][result.digits] = result
         return result
     }
 }

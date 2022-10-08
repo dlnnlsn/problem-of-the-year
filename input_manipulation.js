@@ -12,7 +12,7 @@ function* partitions(year) {
     for (let breakPoint = year.length - 1; breakPoint >= 0; breakPoint--) {
         const last = year.substring(breakPoint)
         for (const start of partitions(year.substring(0, breakPoint))) {
-            yield start.concat([[last, breakPoint, year.length]])
+            yield start.concat([last])
         }
     }
 }
@@ -21,34 +21,29 @@ function* partitions(year) {
 * @param {string} piece
 * @returns {Iterable.<Operation>}
 */
-function* optionsForPiece(part) {
-    const [piece, startIndex, endIndex] = part
+function* optionsForPiece(piece) {
     if (piece === '0') {
         const value = Operation.number(piece)
-        value.startIndex = startIndex
-        value.endIndex = endIndex
+        value.digits = piece
         yield value
         return
     }
     if (piece[0] === '0') {
         const value = Operation.number('0.' + piece.substring(1))
-        value.startIndex = startIndex
-        value.endIndex = endIndex
+        value.digits = piece
         yield value
         return
     }
 
     const value = Operation.number(piece)
-    value.startIndex = startIndex
-    value.endIndex = endIndex
+    value.digits = piece
     yield value
 
     for (let decimalIndex = 1; decimalIndex < piece.length; decimalIndex++) {
         const value = Operation.number(
             piece.substring(0, decimalIndex) + '.' + piece.substring(decimalIndex)
         )
-        value.startIndex = startIndex
-        value.endIndex = endIndex
+        value.digits = piece
         yield value
     }
 }
