@@ -29,6 +29,17 @@ const binaryOperations = [Operation.add, Operation.sub, Operation.mul, Operation
 * @returns {Iterable.<Operation>}
 */
 function* findSolutions(numbers) {
+
+    for (let i = 0; i < numbers.length - 1; i++) {
+        for (const op of binaryOperations) {
+            const res = pruningEngine.applyOperation(op, numbers[i], numbers[i + 1])
+            if (res === undefined) continue
+            yield* findSolutions(
+                numbers.slice(0, i).concat([res]).concat(numbers.slice(i + 2))
+            )
+        }
+    }
+
     for (let i = 0; i < numbers.length; i++) {
         for (const op of unaryOperations) {
             const res = pruningEngine.applyOperation(op, numbers[i])
@@ -42,15 +53,5 @@ function* findSolutions(numbers) {
     if (numbers.length === 1) {
         yield numbers[0]
         return
-    }
-
-    for (let i = 0; i < numbers.length - 1; i++) {
-        for (const op of binaryOperations) {
-            const res = pruningEngine.applyOperation(op, numbers[i], numbers[i + 1])
-            if (res === undefined) continue
-            yield* findSolutions(
-                numbers.slice(0, i).concat([res]).concat(numbers.slice(i + 2))
-            )
-        }
     }
 }
