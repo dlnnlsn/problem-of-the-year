@@ -1,3 +1,8 @@
+/**
+* @param {bigint} m
+* @param {bigint} n
+* @returns {bigint}
+*/
 function gcd(m, n) {
     if (m < 0n) m = -m
     if (n < 0n) n = -n
@@ -12,6 +17,12 @@ function gcd(m, n) {
 }
 
 class Fraction {
+    /**
+    * @param {bigint} numerator
+    * @param {bigint} denominator
+    * @throws {Error} If the denominator is 0
+    * @returns {Fraction}
+    */
     constructor(numerator, denominator) {
         if (denominator === 0n) throw new Error("Division by zero")
         const g = gcd(numerator, denominator)
@@ -23,37 +34,63 @@ class Fraction {
         this.denominator = denominator / g
     }
 
+    /**
+    * @param {Fraction} left
+    * @param {Fraction} right
+    * @returns {Fraction}
+    */
     static add(left, right) {
         const numerator = left.numerator * right.denominator + left.denominator * right.numerator
         const denominator = left.denominator * right.denominator
         return new Fraction(numerator, denominator)
     }
 
+    /**
+    * @param {Fraction} left
+    * @param {Fraction} right
+    * @returns {Fraction}
+    */
     static sub(left, right) {
         const numerator = left.numerator * right.denominator - left.denominator * right.numerator
         const denominator = left.denominator * right.denominator
         return new Fraction(numerator, denominator)
     }
 
+    /**
+    * @param {Fraction} left
+    * @param {Fraction} right
+    * @returns {Fraction}
+    */
     static mul(left, right) {
         const numerator = left.numerator * right.numerator
         const denominator = left.denominator * right.denominator
         return new Fraction(numerator, denominator)
     }
 
+    /**
+    * @param {Fraction} left
+    * @param {Fraction} right
+    * @throws {Error} If `right` is equal to 0
+    * @returns {Fraction}
+    */
     static div(left, right) {
         const numerator = left.numerator * right.denominator
         const denominator = left.denominator * right.numerator
         return new Fraction(numerator, denominator)
     }
 
+    /**
+    * @param {Fraction} frac
+    * @returns {Fraction}
+    */
     static minus(frac) {
-        return {
-            numerator: -frac.numerator,
-            denominator: frac.denominator
-        }
+        return new Fraction(-frac.numerator, frac.denominator)
     }
 
+    /**
+    * @param {Fraction | number | bigint} other
+    * @returns {boolean}
+    */
     eq(other) {
         if (typeof other === 'bigint') return (this.numerator === other) && (this.denominator === 1n)
         if (typeof other === 'number') return (this.numerator == other) && (this.denominator === 1n)
@@ -61,15 +98,26 @@ class Fraction {
     }
 }
 
+/**
+* @param {bigint} m
+* @param {bigint} n
+* @param {bigint} x
+* @returns {bigint}
+*/
 function nthRootStep(m, n, x) {
     return ((n - 1) * x + m / (pow(x, n - 1))) / n
 }
 
+/**
+* @param {bigint} m
+* @param {bigint} n
+* @returns {bigint | undefined}
+*/
 function nthRoot(m, n) {
-    if ((m < 0) && ((n % 2) == 0)) return undefined
-    if (m < 0) return -nthRoot(-m, n)
-    let current = 1
-    let next = nthRootStep(m, n, 1)
+    if ((m < 0n) && ((n % 2n) == 0n)) return undefined
+    if (m < 0n) return -nthRoot(-m, n)
+    let current = 1n
+    let next = nthRootStep(m, n, 1n)
     do {
         current = next
         next = nthRootStep(m, n, next)

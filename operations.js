@@ -1,5 +1,8 @@
 importScripts("./math.js")
 
+/**
+* @enum {number}
+*/
 const OperationTypes = {
     Add: 0,
     Subtract: 1,
@@ -12,6 +15,10 @@ const OperationTypes = {
     Number: 8,
 }
 
+/**
+* @param {Operation} op
+* @returns {boolean}
+*/
 function isSimpleNumber(op) {
     if (op.operationType !== OperationTypes.Number) return false
     if (op.expression.includes('.')) return op.expression[0] === '0'
@@ -19,11 +26,22 @@ function isSimpleNumber(op) {
 }
 
 class Operation {
+    /** @type {OperationTypes} */
     operationType
+    /** @type {number} */
     numberOfOperations
+    /** @type {string} */
     expression
+    /** @type {Fraction} */
     value
 
+    /**
+    * @param {OperationTypes} operationType
+    * @param {number} numberOfOperations
+    * @param {string} expression
+    * @param {Fraction} value
+    * @returns {Operation}
+    */
     constructor(operationType, numberOfOperations, expression, value) {
         this.operationType = operationType
         this.numberOfOperations = numberOfOperations
@@ -31,6 +49,11 @@ class Operation {
         this.value = value
     }
 
+    /**
+    * @param {Operation} left
+    * @param {Operation} right
+    * @returns {Operation | undefined}
+    */
     static add(left, right) {
         // Prefer (a + b) + c to a + (b + c)
         if (right.operationType === OperationTypes.Add) return undefined
@@ -46,6 +69,11 @@ class Operation {
         )
     }
 
+    /**
+    * @param {Operation} left
+    * @param {Operation} right
+    * @returns {Operation | undefined}
+    */
     static sub(left, right) {
         // Prefer (a - b) - c to a - (b + c)
         if (right.operationType === OperationTypes.Add) return undefined
@@ -63,11 +91,20 @@ class Operation {
         )
     }
 
+    /**
+    * @param {Operation} op
+    * @returns {string}
+    */
     static #bracketForMultiply(op) {
         if ([OperationTypes.Add, OperationTypes.Subtract, OperationTypes.UnaryMinus].includes(op.operationType)) return "\\left(" + op.expression + "\\right)"
         return op.expression
     }
 
+    /**
+    * @param {Operation} left
+    * @param {Operation} right
+    * @returns {Operation | undefined}
+    */
     static mul(left, right) {
         // Prefer -(a x b) to (-a) x b
         if (left.operationType === OperationTypes.UnaryMinus) return undefined
@@ -98,6 +135,11 @@ class Operation {
         )
     }
 
+    /**
+    * @param {Operation} left
+    * @param {Operation} right
+    * @returns {Operation | undefined}
+    */
     static div(left, right) {
         // Prefer -(a / b) to (-a) / b
         if (left.operationType === OperationTypes.UnaryMinus) return undefined
