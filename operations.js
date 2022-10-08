@@ -245,4 +245,45 @@ class Operation {
             new Fraction(numerator, denominator)
         )
     }
+
+    /**
+    * @param {Operation} left
+    * @param {Operation} right
+    * @returns {Operation | undefined}
+    */
+    static exponentiate(left, right) {
+        // Prefer a^(b x c) to (a^b)^c
+        if (left.operationType === OperationTypes.Exponentiate) return undefined
+        // Prefer Sqrt(a^b) to Sqrt(a)^b
+        if (left.operationType === OperationTypes.SquareRoot) return undefined
+        // Only allow small exponents
+        if (right.value.gt(100) && !left.value.eq(1) && !left.value.eq(-1)) return undefined
+        if (right.value.lt(-100) && !left.value.eq(1) && !left.value.eq(-1)) return undefined
+        // Prefer a x 1 to a^1
+        if (right.value.eq(1)) return undefined
+        // Prefer 1^(number formed by digits in expression) to 1^(complicated expression)
+        if (left.value.eq(1) && !isSimpleNumber(right)) return undefined
+        // Prefer (number formed by digits in expression)^0 to (complicated expression)^0
+        if (right.value.eq(0) && !isSimpleNumber(left)) return undefined
+        // Prefer 0 x a to 0^a
+        if (left.value.eq(0) && !right.value.eq(0)) return undefined
+
+        const base = right.value.numerator < 0 ? left.value.reciprocal() : left.value
+        const exp = right.value.numerator < 0 ? Fraction.minus(right.value) : right.value
+
+        let numerator = nthRoot(base.numerator, exp.denominator)
+        if (numerator === undefined) return undefined
+        numerator = pow(numerator, exp.numerator)
+
+        let denominator = nthRoot(base.denominator, exp.denominator)
+        if (denominator === undefined) return undefined
+        denominator = pow(denominator, exp.numerator)
+
+        return new Operation(
+            OperationTypes.Exponentiate,
+            left.numberOfOperations + right.numberOfOperations + 1,
+            left.operationType === "{" + (OperationTypes.Number ? left.expression : "\\left(" + left.expression + "\\right)") + "}^{" + right.expression + "}",
+            new Fraction(numerator, denominator)
+        )
+    }
 }

@@ -96,6 +96,34 @@ class Fraction {
         if (typeof other === 'number') return (this.numerator == other) && (this.denominator === 1n)
         return (this.numerator === other.numerator) && (this.denominator === other.denominator)
     }
+
+    /**
+    * @param {Fraction | number | bigint} other
+    * @returns {boolean}
+    */
+    gt(other) {
+        if (typeof other === 'number') return this.numerator > (BigInt(other) * this.denominator)
+        if (typeof other === 'bigint') return this.numerator > (other * this.denominator)
+        return (this.numerator * other.denominator) > (this.denominator * other.numerator)
+    }
+
+    /**
+    * @param {Fraction | number | bigint} other
+    * @returns {boolean}
+    */
+    lt(other) {
+        if (typeof other === 'number') return this.numerator < (BigInt(other) * this.denominator)
+        if (typeof other === 'bigint') return this.numerator < (other * this.denominator)
+        return (this.numerator * other.denominator) < (this.denominator * other.numerator)
+    }
+
+    /**
+    * @throws {Error} If value is 0
+    * @returns {Fraction}
+    */
+    reciprocal() {
+        return new Fraction(this.denominator, this.numerator)
+    }
 }
 
 /**
@@ -114,6 +142,7 @@ function nthRootStep(m, n, x) {
 * @returns {bigint | undefined}
 */
 function nthRoot(m, n) {
+    if (n === 1n) return m
     if ((m < 0n) && ((n % 2n) == 0n)) return undefined
     if (m < 0n) return -nthRoot(-m, n)
     let current = 1n
