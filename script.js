@@ -8,8 +8,9 @@ for (let i = 0; i < 100; ++i) {
     resultsContainer.append(label)
     resultLabels.push(label)
 }
+resetLabels()
 
-function typeset(num, expression) {
+function typeset(num, expression, found = true) {
     const element = document.createElement('span')
     element.innerHTML = '$$' + num + ' = ' + expression + '$$'
     MathJax.startup.promise = MathJax.startup.promise
@@ -17,8 +18,17 @@ function typeset(num, expression) {
         .then(() => {
             const label = resultLabels[num - 1]
             label.replaceChildren(element)
-            label.classList.add('found')
+            if (found) label.classList.add('found')
         })
+}
+
+function resetLabels() {
+    MathJax.startup.output.clearCache()
+    for (let i = 0; i < 100; i++) {
+        const label = resultLabels[i];
+        label.classList.remove('found')
+        typeset(i + 1, '{\\color{gray}\\textit{No solution found}}', false)
+    }
 }
 
 var worker = null
@@ -28,12 +38,7 @@ function findSolutions() {
         worker.terminate()
     }
 
-    for (const label of resultLabels) {
-        label.replaceChildren()
-        label.classList.remove('found')
-    }
-
-    MathJax.startup.output.clearCache()
+    resetLabels()
 
     worker = new Worker('./solver_worker.js')
     worker.onmessage = function(event) {
