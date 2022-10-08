@@ -197,4 +197,26 @@ class Operation {
             factorials[op.value.numerator]
         )
     }
+
+    /**
+    * @param {Operation} op
+    * @returns {Operation | undefined}
+    */
+    static unaryMinus(op) {
+        // Prefer a to -(-a)
+        if (op.operationType === OperationTypes.UnaryMinus) return undefined
+        // Prefer (-a) + b to -(a - b)
+        if (op.operationType === OperationTypes.Subtract) return undefined
+        // Prefer (-a) - b to -(a + b)
+        if (op.operationType === OperationTypes.Add) return undefined
+        // Prefer 0 to -0
+        if (op.value.eq(0)) return undefined
+
+        return new Operation(
+            OperationTypes.UnaryMinus,
+            op.numberOfOperations + 1,
+            op.operationType === OperationTypes.Number ? "-" + op.expression : "-\\left(" + op.expression + "\\right)",
+            Fraction.minus(op.value)
+        )
+    }
 }
