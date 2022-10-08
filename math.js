@@ -133,7 +133,7 @@ class Fraction {
 * @returns {bigint}
 */
 function nthRootStep(m, n, x) {
-    return ((n - 1) * x + m / (pow(x, n - 1))) / n
+    return ((n - 1n) * x + m / (pow(x, n - 1n))) / n
 }
 
 /**
@@ -144,14 +144,20 @@ function nthRootStep(m, n, x) {
 function nthRoot(m, n) {
     if (n === 1n) return m
     if ((m < 0n) && ((n % 2n) == 0n)) return undefined
-    if (m < 0n) return -nthRoot(-m, n)
+    if (m < 0n) {
+        const res = nthRoot(-m, n)
+        if (res === undefined) return undefined
+        return -res
+    }
     let current = 1n
     let next = nthRootStep(m, n, 1n)
     do {
         current = next
         next = nthRootStep(m, n, next)
     } while (current > next)
-    if (pow(current, n) === m) return current
+    if (pow(current, n) === m) {
+        return current
+    }
     return undefined
 }
 
@@ -161,7 +167,7 @@ function nthRoot(m, n) {
 * @returns {bigint}
 */
 function pow(base, exp) {
-    if (base === 0n) return exp === 0n ? 1 : 0
+    if (base === 0n) return exp === 0n ? 1n : 0n
     if (base === 1n) return 1n
     if (base === -1n) return exp % 2n === 1n ? -1n : 1n
     if (base === 2n) return 1n << exp

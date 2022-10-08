@@ -4,10 +4,9 @@ importScripts('./math.js')
 const factorials = [new Fraction(1n, 1n)]
 for (let num = 1; num <= 20; ++num) {
     factorials.push(
-        factorials[num - 1] * new Fraction(BigInt(num), 1n)
+        Fraction.mul(factorials[num - 1], new Fraction(BigInt(num), 1n))
     )
 }
-
 
 /**
 * @enum {number}
@@ -188,13 +187,15 @@ class Operation {
         if (op.value.numerator < 0n) return undefined
         // Prefer 1 to 1!
         if (op.value.numerator === 1n) return undefined
+        // Prefer 2 to 2!
+        if (op.value.numerator === 2n) return undefined
         // Only allow small factorials
         if (op.value.numerator > 20) return undefined
 
         return new Operation(
             OperationTypes.Factorial,
             op.numberOfOperations + 1,
-            op.operationType === OperationTypes.Number ? op.expression + "!" : "\\left(" + op.expression + "\\right)!",
+            (op.operationType === OperationTypes.Number) ? op.expression + "!" : "\\left(" + op.expression + "\\right)!",
             factorials[op.value.numerator]
         )
     }
@@ -216,7 +217,7 @@ class Operation {
         return new Operation(
             OperationTypes.UnaryMinus,
             op.numberOfOperations + 1,
-            op.operationType === OperationTypes.Number ? "-" + op.expression : "-\\left(" + op.expression + "\\right)",
+            (op.operationType === OperationTypes.Number) ? "-" + op.expression : "-\\left(" + op.expression + "\\right)",
             Fraction.minus(op.value)
         )
     }
@@ -269,8 +270,8 @@ class Operation {
         // Prefer 0 x a to 0^a
         if (left.value.eq(0) && !right.value.eq(0)) return undefined
 
-        const base = right.value.numerator < 0 ? left.value.reciprocal() : left.value
-        const exp = right.value.numerator < 0 ? Fraction.minus(right.value) : right.value
+        const base = (right.value.numerator < 0n) ? left.value.reciprocal() : left.value
+        const exp = (right.value.numerator < 0n) ? Fraction.minus(right.value) : right.value
 
         let numerator = nthRoot(base.numerator, exp.denominator)
         if (numerator === undefined) return undefined
@@ -283,7 +284,7 @@ class Operation {
         return new Operation(
             OperationTypes.Exponentiate,
             left.numberOfOperations + right.numberOfOperations + 1,
-            left.operationType === "{" + (OperationTypes.Number ? left.expression : "\\left(" + left.expression + "\\right)") + "}^{" + right.expression + "}",
+            "{" + ((left.operationType === OperationTypes.Number) ? left.expression : "\\left(" + left.expression + "\\right)") + "}^{" + right.expression + "}",
             new Fraction(numerator, denominator)
         )
     }
