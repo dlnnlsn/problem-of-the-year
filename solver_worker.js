@@ -26,16 +26,6 @@ const binaryOperations = [Operation.add, Operation.sub, Operation.mul, Operation
 * @returns {Iterable.<Operation>}
 */
 function* findSolutions(numbers) {
-    if (numbers.length === 1) {
-        for (const op of unaryOperations) {
-            const res = op(numbers[0])
-            if (res === undefined) continue
-            yield res
-        }
-        yield numbers[0]
-        return
-    }
-
     for (let i = 0; i < numbers.length; i++) {
         for (const op of unaryOperations) {
             const res = op(numbers[i])
@@ -45,6 +35,11 @@ function* findSolutions(numbers) {
             )
         }
     } 
+
+    if (numbers.length === 1) {
+        yield numbers[0]
+        return
+    }
 
     for (let i = 0; i < numbers.length - 1; i++) {
         for (const op of binaryOperations) {
