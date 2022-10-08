@@ -1,5 +1,4 @@
-import 'math.js'
-import { Fraction } from './math'
+importScripts('./math.js')
 
 /** @type {Array<Fraction>} */
 const factorials = [new Fraction(1, 1)]
@@ -34,7 +33,7 @@ function isSimpleNumber(op) {
     return true
 }
 
-export class Operation {
+class Operation {
     /** @type {OperationTypes} */
     operationType
     /** @type {number} */

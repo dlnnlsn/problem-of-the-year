@@ -8,7 +8,7 @@ function findSolutions() {
     }
     worker = new Worker("./solver_worker.js")
     worker.onmessage = function(event) {
-        alert(event.data)
+        console.log(event.data)
     }
     worker.postMessage({ year: yearInput.value })
 }
