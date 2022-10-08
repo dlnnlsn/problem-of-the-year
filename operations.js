@@ -1,12 +1,13 @@
 importScripts('./math.js')
 
 /** @type {Array<Fraction>} */
-const factorials = [new Fraction(1, 1)]
+const factorials = [new Fraction(1n, 1n)]
 for (let num = 1; num <= 20; ++num) {
     factorials.push(
-        factorials[num - 1] * new Fraction(BigInt(num), 1)
+        factorials[num - 1] * new Fraction(BigInt(num), 1n)
     )
 }
+
 
 /**
 * @enum {number}
@@ -294,7 +295,7 @@ class Operation {
     static number(expression) {
         let value
         const indexOfDot = expression.indexOf('.')
-        if (indexOfDot === -1) value = new Fraction(BigInt(expression), 1)
+        if (indexOfDot === -1) value = new Fraction(BigInt(expression), 1n)
         else {
             const wholePart = BigInt(expression.substring(0, indexOfDot))
             const fractionalPart = BigInt(expression.substring(indexOfDot + 1))

@@ -5,8 +5,11 @@ importScripts('./operations.js')
 * @returns {Iterable.<Array<string>>}
 */
 function* partitions(year) {
-    if (year === '') return []
-    for (let breakPoint = 1; breakPoint <= year.length; breakPoint++) {
+    if (year === '') {
+        yield []
+        return
+    }
+    for (let breakPoint = 0; breakPoint < year.length; breakPoint++) {
         const last = year.substring(breakPoint)
         for (const start of partitions(year.substring(0, breakPoint))) {
             yield start.concat([last])
@@ -19,14 +22,20 @@ function* partitions(year) {
 * @returns {Iterable.<Operation>}
 */
 function* optionsForPiece(piece) {
-    if (piece === '0') return Operation.number(piece)
-    if (piece[0] === '0') return Operation.number('0.' + piece.substring(1))
-    for (let decimalIndex = 1; decimalIndex <= piece.length; decimalIndex++) {
+    if (piece === '0') {
+        yield Operation.number(piece)
+        return
+    }
+    if (piece[0] === '0') {
+        Operation.number('0.' + piece.substring(1))
+        return
+    }
+    for (let decimalIndex = 1; decimalIndex < piece.length; decimalIndex++) {
         yield Operation.number(
             piece.substring(0, decimalIndex) + '.' + piece.substring(decimalIndex)
         )
     }
-    return Operation.number(piece)
+    yield Operation.number(piece)
 }
 
 /**
@@ -34,7 +43,10 @@ function* optionsForPiece(piece) {
 * @returns {Iterable.<Array<Operation>>}
 */
 function* optionsForPartition(partition) {
-    if (partition === []) return []
+    if (partition.length === 0) {
+        yield []
+        return
+    }
     const last = partition.pop()
     for (const start of optionsForPartition(partition)) {
         for (const pieceOption of optionsForPiece(last)) {

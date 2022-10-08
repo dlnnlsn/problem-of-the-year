@@ -26,7 +26,7 @@ class Fraction {
     constructor(numerator, denominator) {
         if (denominator === 0n) throw new Error("Division by zero")
         const g = gcd(numerator, denominator)
-        let negative = (negative < 0n) ^ (denominator < 0n)
+        let negative = (numerator < 0n) ^ (denominator < 0n)
         if (numerator < 0n) numerator = -numerator
         if (negative) numerator = -numerator
         if (denominator < 0n) denominator = -denominator
