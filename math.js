@@ -98,26 +98,6 @@ class Fraction {
     }
 
     /**
-    * @param {Fraction | number | bigint} other
-    * @returns {boolean}
-    */
-    gt(other) {
-        if (typeof other === 'number') return this.numerator > (BigInt(other) * this.denominator)
-        if (typeof other === 'bigint') return this.numerator > (other * this.denominator)
-        return (this.numerator * other.denominator) > (this.denominator * other.numerator)
-    }
-
-    /**
-    * @param {Fraction | number | bigint} other
-    * @returns {boolean}
-    */
-    lt(other) {
-        if (typeof other === 'number') return this.numerator < (BigInt(other) * this.denominator)
-        if (typeof other === 'bigint') return this.numerator < (other * this.denominator)
-        return (this.numerator * other.denominator) < (this.denominator * other.numerator)
-    }
-
-    /**
     * @throws {Error} If value is 0
     * @returns {Fraction}
     */

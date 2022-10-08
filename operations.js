@@ -259,8 +259,10 @@ class Operation {
         // Prefer Sqrt(a^b) to Sqrt(a)^b
         if (left.operationType === OperationTypes.SquareRoot) return undefined
         // Only allow small exponents
-        if (right.value.gt(100) && !left.value.eq(1) && !left.value.eq(-1)) return undefined
-        if (right.value.lt(-100) && !left.value.eq(1) && !left.value.eq(-1)) return undefined
+        if ((right.value.numerator > 100n) || (right.value.numerator < 100n) ||
+            (right.value.denominator > 100n) || (right.value.denominator < -100n)) {
+            if (!left.value.eq(1) && !left.value.eq(-1)) return undefined
+        }
         // Prefer a x 1 to a^1
         if (right.value.eq(1)) return undefined
         // Prefer 1^(number formed by digits in expression) to 1^(complicated expression)
