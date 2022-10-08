@@ -1,10 +1,18 @@
 importScripts('./input_manipulation.js')
 
+const bestSolutions = {}
+
 onmessage = function (event) {
     for (const startingSet of startingNumbers(event.data.year)) {
         for (const solution of findSolutions(startingSet)) {
             if (solution.value.denominator !== 1n) continue
-            if (solution.value.numerator <= 0n) continue
+            const num = solution.value.numerator
+            if (num <= 0n) continue
+            console.log(solution.value.numerator + " = " + solution.expression)
+            if (num in bestSolutions) {
+                if (solution.numberOfOperations >= bestSolutions[num].numberOfOperations) continue
+            }
+            bestSolutions[num] = solution
             postMessage(solution)
         }
     }

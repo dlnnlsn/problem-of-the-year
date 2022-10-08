@@ -30,7 +30,6 @@ function findSolutions() {
     worker = new Worker("./solver_worker.js")
     worker.onmessage = function(event) {
         const solution = event.data
-        console.log(solution.value.numerator + " = " + solution.expression)
         if (solution.value.numerator <= 100n) {
             const num = Number(solution.value.numerator)
             typeset(num, solution.expression)
