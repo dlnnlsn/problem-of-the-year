@@ -286,4 +286,29 @@ class Operation {
             new Fraction(numerator, denominator)
         )
     }
+
+    /**
+    * @param {string} expression
+    * @returns {Operation}
+    */
+    static number(expression) {
+        let value
+        const indexOfDot = expression.indexOf('.')
+        if (indexOfDot === -1) value = new Fraction(BigInt(expression), 1)
+        else {
+            const wholePart = BigInt(expression.substring(0, indexOfDot))
+            const fractionalPart = BigInt(expression.substring(indexOfDot + 1))
+            const powerOfTen = expression.length - indexOfDot - 1
+            const denominator = pow(10n, BigInt(powerOfTen))
+            const numerator = wholePart * denominator + fractionalPart
+            value = new Fraction(numerator, denominator)
+        }
+
+        return new Operation(
+            OperationTypes.Number,
+            0,
+            expression,
+            value
+        )
+    }
 }
