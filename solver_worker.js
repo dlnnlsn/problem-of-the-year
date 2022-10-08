@@ -11,7 +11,6 @@ onmessage = function (event) {
             if (solution.value.denominator !== 1n) continue
             const num = solution.value.numerator
             if (num <= 0n) continue
-            console.log(solution.value.numerator + " = " + solution.expression)
             if (num in bestSolutions) {
                 if (solution.numberOfOperations >= bestSolutions[num].numberOfOperations) continue
             }
