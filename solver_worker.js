@@ -3,7 +3,9 @@ importScripts('./input_manipulation.js')
 onmessage = function (event) {
     for (const startingSet of startingNumbers(event.data.year)) {
         for (const solution of findSolutions(startingSet)) {
-
+            if (solution.value.denominator !== 1n) continue
+            if (solution.value.numerator <= 0n) continue
+            postMessage(solution)
         }
     }
 }
@@ -16,7 +18,6 @@ const binaryOperations = [Operation.add, Operation.sub, Operation.mul, Operation
 * @returns {Iterable.<Operation>}
 */
 function* findSolutions(numbers) {
-    console.log(numbers)
     if (numbers.length === 1) {
         for (const op of unaryOperations) {
             const res = op(numbers[0])
