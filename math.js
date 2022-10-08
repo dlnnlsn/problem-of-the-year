@@ -53,6 +53,12 @@ class Fraction {
             denominator: frac.denominator
         }
     }
+
+    eq(other) {
+        if (typeof other === 'bigint') return (this.numerator === other) && (this.denominator === 1n)
+        if (typeof other === 'number') return (this.numerator == other) && (this.denominator === 1n)
+        return (this.numerator === other.numerator) && (this.denominator === other.denominator)
+    }
 }
 
 function nthRootStep(m, n, x) {
