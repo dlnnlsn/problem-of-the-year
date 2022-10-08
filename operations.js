@@ -134,6 +134,9 @@ class Operation {
         if (right.value.eq(1) && (right.operationType === OperationTypes.Factorial)) return undefined
         // A little silly to explicitly prune this, but prefer 2 + 2 to 2 x 2 😛
         if (left.value.eq(2) && right.value.eq(2)) return undefined
+        // Prefer 1 x a + b to 1 x (a + b)
+        if (left.value.eq(1) && (right.operationType === OperationTypes.Add)) return undefined
+        if (left.value.eq(1) && (right.operationType === OperationTypes.Subtract)) return undefined
 
         return new Operation(
             OperationTypes.Multiply,
@@ -271,6 +274,8 @@ class Operation {
         if (right.value.eq(0) && !isSimpleNumber(left)) return undefined
         // Prefer 0 x a to 0^a
         if (left.value.eq(0) && !right.value.eq(0)) return undefined
+        // Prefer (-1)^a to (-1)^(-a)
+        if (left.value.eq(-1) && (right.operationType === OperationTypes.UnaryMinus)) return undefined
 
         const base = (right.value.numerator < 0n) ? left.value.reciprocal() : left.value
         const exp = (right.value.numerator < 0n) ? Fraction.minus(right.value) : right.value
