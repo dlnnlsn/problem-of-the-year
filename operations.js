@@ -69,8 +69,6 @@ class Operation {
         if (right.operationType === OperationTypes.Add) return undefined
         // Prefer (a + b) - c to a + (b - c)
         if (right.operationType === OperationTypes.Subtract) return undefined
-        // Prefer a - b to a + (-b)
-        if (right.operationType === OperationTypes.UnaryMinus) return undefined
         return new Operation(
             OperationTypes.Add,
             left.numberOfOperations + right.numberOfOperations + 1,
@@ -89,8 +87,6 @@ class Operation {
         if (right.operationType === OperationTypes.Add) return undefined
         // Prefer (a - b) + c to a - (b - c)
         if (right.operationType === OperationTypes.Subtract) return undefined
-        // Prefer a + b to a - (-b)
-        if (right.operationType === OperationTypes.UnaryMinus) return undefined
         // Prefer a + 0 to a - 0
         if (right.value.numerator === 0n) return undefined
         return new Operation(
@@ -124,16 +120,10 @@ class Operation {
         if (right.operationType === OperationTypes.Multiply) return undefined
         // Prefer (a x b) / c to a x (b / c)
         if (right.operationType === OperationTypes.Divide) return undefined
-        // Prefer Sqrt(a x b) to Sqrt(a) x Sqrt(b)
-        if ((left.operationType === OperationTypes.SquareRoot) && (right.operationType === OperationTypes.SquareRoot)) return undefined
         // Prefer (number made up of digits of expression) x 0 to (complicated expression) x 0
         if (left.value.eq(0) && !isSimpleNumber(right)) return undefined
         // Prefer 0 x (number consisting of digits of expression) to 0 x (complicated expression)
         if (right.value.eq(0) && !isSimpleNumber(left)) return undefined
-        // Prefer 0 + a to 0! x a (or 1 x a to 1! x a, but factorial already imposes this pruning)
-        if (left.value.eq(1) && (left.operationType === OperationTypes.Factorial)) return undefined
-        // Prefer a + 0 to a x 0!
-        if (right.value.eq(1) && (right.operationType === OperationTypes.Factorial)) return undefined
         // A little silly to explicitly prune this, but prefer 2 + 2 to 2 x 2 😛
         if (left.value.eq(2) && right.value.eq(2)) return undefined
         // Prefer 1 x a + b to 1 x (a + b)
@@ -162,8 +152,6 @@ class Operation {
         if (left.operationType === OperationTypes.Divide) return undefined
         // Prefer (a / b) x c to a / (b / c)
         if (right.operationType === OperationTypes.Divide) return undefined
-        // Prefer Sqrt(a / b) to Sqrt(a) / Sqrt(b)
-        if ((left.operationType === OperationTypes.SquareRoot) && (right.operationType === OperationTypes.SquareRoot)) return undefined
         // Can not divide by 0
         if (right.value.eq(0)) return undefined
         // Prefer 0 x a to 0 / a
@@ -190,10 +178,6 @@ class Operation {
         if (op.value.denominator !== 1n) return undefined
         // Only allow factorials of non-negative integers
         if (op.value.numerator < 0n) return undefined
-        // Prefer 1 to 1!
-        if (op.value.numerator === 1n) return undefined
-        // Prefer 2 to 2!
-        if (op.value.numerator === 2n) return undefined
         // Only allow small factorials
         if (op.value.numerator > 20) return undefined
 
@@ -210,14 +194,10 @@ class Operation {
     * @returns {Operation | undefined}
     */
     static unaryMinus(op) {
-        // Prefer a to -(-a)
-        if (op.operationType === OperationTypes.UnaryMinus) return undefined
         // Prefer (-a) + b to -(a - b)
         if (op.operationType === OperationTypes.Subtract) return undefined
         // Prefer (-a) - b to -(a + b)
         if (op.operationType === OperationTypes.Add) return undefined
-        // Prefer 0 to -0
-        if (op.value.eq(0)) return undefined
 
         return new Operation(
             OperationTypes.UnaryMinus,
@@ -232,11 +212,6 @@ class Operation {
     * @returns {Operation | undefined}
     */
     static squareRoot(op) {
-        // Prefer 0 to Sqrt(0)
-        if (op.value.eq(0)) return undefined
-        // Prefer 1 to Sqrt(1)
-        if (op.value.eq(1)) return undefined
-
         const numerator = nthRoot(op.value.numerator, 2n)
         // Numerator must be a perfect square
         if (numerator === undefined) return undefined
@@ -276,8 +251,6 @@ class Operation {
         if (right.value.eq(0) && !isSimpleNumber(left)) return undefined
         // Prefer 0 x a to 0^a
         if (left.value.eq(0) && !right.value.eq(0)) return undefined
-        // Prefer (-1)^a to (-1)^(-a)
-        if (left.value.eq(-1) && (right.operationType === OperationTypes.UnaryMinus)) return undefined
 
         const base = (right.value.numerator < 0n) ? left.value.reciprocal() : left.value
         const exp = (right.value.numerator < 0n) ? Fraction.minus(right.value) : right.value

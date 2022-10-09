@@ -122,6 +122,7 @@ function nthRootStep(m, n, x) {
 * @returns {bigint | undefined}
 */
 function nthRoot(m, n) {
+    if (m === 0n) return 0n
     if (n === 1n) return m
     if ((m < 0n) && ((n % 2n) == 0n)) return undefined
     if (m < 0n) {
