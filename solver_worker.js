@@ -1,7 +1,5 @@
 importScripts('./input_manipulation.js')
 
-const bestSolutions = {}
-
 let pruningEngine = null
 
 onmessage = function (event) {
@@ -14,10 +12,6 @@ onmessage = function (event) {
             if (solution.value.denominator !== 1n) continue
             const num = solution.value.numerator
             if (num <= 0n) continue
-            if (num in bestSolutions) {
-                if (solution.numberOfOperations >= bestSolutions[num].numberOfOperations) continue
-            }
-            bestSolutions[num] = solution
             postMessage(solution)
         }
     }
