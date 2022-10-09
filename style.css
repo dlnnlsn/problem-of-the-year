@@ -1,6 +1,6 @@
 #results-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
     margin-top: 2rem;
     padding: 1rem;
     gap: 1rem;
@@ -13,6 +13,7 @@
     align-items: center;
     height: 100%;
     box-shadow: 0 0 0.4rem 0.2rem gray;
+    font-size: 1.2rem;
 }
 
 .solution:hover {
@@ -34,6 +35,13 @@
     align-items: center;
     padding-left: 3rem;
     padding-right: 3rem;
+    gap: 1rem;
+}
+
+@media (max-width: 500px) {
+    #header {
+        flex-direction: column;
+    }
 }
 
 #working-status {
