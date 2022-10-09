@@ -305,7 +305,7 @@ class PruningEngine {
     }
 
     /**
-    * @param {(left: Operation, right?: Opertaion) => (Operation | undefined)} op
+    * @param {(left: Operation, right?: Operation) => (Operation | undefined)} op
     * @param {Operation} left
     * @param {Operation} right
     */

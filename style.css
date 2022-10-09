@@ -26,3 +26,64 @@
 .found:hover {
     box-shadow: 0 0 0.8rem 0.4rem cornflowerblue;
 }
+
+#header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+#working-status {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#loader {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    width: 78px;
+    height:108px;
+}
+
+#loader div {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: loader-animation 2s 0.2s ease infinite;
+}
+
+#loader span {
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-color: cornflowerblue;
+}
+
+#loader div:nth-child(2) {
+    animation-delay: 0.6s;
+}
+
+#loader div:nth-child(3) {
+    animation-delay: 1.2s;
+}
+
+@keyframes loader-animation {
+    0% {
+        transform: translateY(0px); 
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(30px);
+        opacity: 0.2;
+    }
+    100% {
+        transform: trasnlateY(0px);
+        opacity: 1;
+    }
+}

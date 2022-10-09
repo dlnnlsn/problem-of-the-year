@@ -1,5 +1,6 @@
 const yearInput = document.getElementById('year')
 const resultsContainer = document.getElementById('results-container')
+const workingStatus = document.getElementById('working-status')
 const resultLabels = []
 
 for (let i = 0; i < 100; ++i) {
@@ -23,6 +24,7 @@ function typeset(num, expression, found = true) {
 }
 
 function resetLabels() {
+    workingStatus.style.display = 'none'
     MathJax.startup.output.clearCache()
     for (let i = 0; i < 100; i++) {
         const label = resultLabels[i];
@@ -42,6 +44,10 @@ function findSolutions() {
 
     worker = new Worker('./solver_worker.js')
     worker.onmessage = function(event) {
+        if (event.data === "Done!") {
+            workingStatus.style.display = 'none'
+            return;
+        }
         const solution = event.data
         if (solution.value.numerator <= 100n) {
             const num = Number(solution.value.numerator)
@@ -49,4 +55,5 @@ function findSolutions() {
         }
     }
     worker.postMessage({ year: yearInput.value })
+    workingStatus.style.display = 'flex'
 }

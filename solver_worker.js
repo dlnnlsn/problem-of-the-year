@@ -21,6 +21,7 @@ onmessage = function (event) {
             postMessage(solution)
         }
     }
+    postMessage("Done!")
 }
 
 const unaryOperations = [Operation.factorial, Operation.unaryMinus, Operation.squareRoot]
