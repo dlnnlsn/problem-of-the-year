@@ -7,6 +7,9 @@ let pruningEngine = null
 onmessage = function (event) {
     pruningEngine = new PruningEngine()
     for (const startingSet of startingNumbers(event.data.year)) {
+        for (const number of startingSet) {
+            pruningEngine.registerNumber(number)
+        }
         for (const solution of findSolutions(startingSet)) {
             if (solution.value.denominator !== 1n) continue
             const num = solution.value.numerator

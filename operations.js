@@ -359,4 +359,13 @@ class PruningEngine {
         this.sectionCache[numerator][denominator][result.digits] = result
         return result
     }
+
+    /**
+    * @param {Operation} op
+    */
+    registerNumber(op) {
+        this.sectionCache[op.value.numerator] ||= {}
+        this.sectionCache[op.value.numerator][op.value.denominator] ||= {}
+        this.sectionCache[op.value.numerator][op.value.denominator][op.digits] = op
+    }
 }
