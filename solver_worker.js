@@ -1,5 +1,8 @@
 importScripts('./input_manipulation.js')
 
+const unaryOperations = [Operation.factorial, Operation.unaryMinus, Operation.squareRoot]
+const binaryOperations = [Operation.add, Operation.sub, Operation.mul, Operation.div, Operation.exponentiate]
+
 let pruningEngine = null
 
 onmessage = function (event) {
@@ -18,9 +21,6 @@ onmessage = function (event) {
     }
     postMessage("Done!")
 }
-
-const unaryOperations = [Operation.factorial, Operation.unaryMinus, Operation.squareRoot]
-const binaryOperations = [Operation.add, Operation.sub, Operation.mul, Operation.div, Operation.exponentiate]
 
 class Solver {
     numbers
